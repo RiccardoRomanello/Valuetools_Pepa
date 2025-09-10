@@ -1,0 +1,29 @@
+lambda1 = 0.5;
+g = 0.5;
+mu1 = 0.5; 
+r = 0.5;
+
+lambda2 = 0.5; 
+mu2 = 0.5; 
+
+P1 = (think, lambda1).P1a;
+P1a = (get1, g).P1b;
+P1b = (use, mu1).P1c;
+P1c = (rel, r).P1;
+
+P2 = (think, lambda2).P2a;
+P2a = (get2, g).P2b;
+P2b = (use, mu2).P2c;
+P2c = (rel, r).P2;
+
+Mem1 = (get2, infty).Mem1a;
+Mem1a = (use, infty).Mem1b;
+Mem1b = (rel, infty).Mem2;
+
+
+Mem2 = (get1, infty).Mem2a;
+Mem2a = (use, infty).Mem2b;
+Mem2b = (rel, infty).Mem1;
+
+
+((P1 <> P2) <get1, get2, use, rel> Mem1)
