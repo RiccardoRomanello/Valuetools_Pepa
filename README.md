@@ -1,4 +1,4 @@
-# PEPA Update
+# PEPA Eclipse Plug-in Update
 
 This repository contains an extended version of [PEPA](https://www.dcs.ed.ac.uk/pepa/).
 
