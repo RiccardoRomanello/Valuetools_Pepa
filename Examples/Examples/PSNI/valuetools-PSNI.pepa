@@ -1,0 +1,18 @@
+set_default_level low;
+
+high h;
+
+// 3 fair miners + h transition
+P0 = (m1,0.5).P1 + (m2,0.5).P2 + (m3,0.5).P3 + (h, 0.1).P4;
+P1 = (v1,0.3).P0 + (m1,0.5).P1;
+P2 = (v2,0.3).P0 + (m2,0.5).P2;
+P3 = (v3,0.3).P0 + (m3,0.5).P3;
+
+// 2 fair miners, 1 unfair
+P4 = (mu,0.5).P5 + (m1,0.5).P6 + (m2,0.5).P7;
+P5 = (vu,0.3).P4 + (mu,0.5).P5;
+P6 = (v1,0.3).P4 + (mu,0.5).P5 + (m1,0.5).P6;
+P7 = (v2,0.3).P4 + (mu,0.5).P5 + (m2,0.5).P7;
+
+
+P0
