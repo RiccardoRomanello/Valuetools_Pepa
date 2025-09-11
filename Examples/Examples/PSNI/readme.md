@@ -7,7 +7,9 @@ We provide the PEPA sources files to replicate the fair/unfair miner example we 
 
 The underlying LTS is as follows. 
 
-<center><img width="700" height="400" alt="Screenshot 2025-09-11 alle 16 52 58" src="https://github.com/user-attachments/assets/14d3fe15-f02c-43da-a136-5e4a18ff0e1a"/></center>
+<p align="center">  
+  <img width="700" height="400" alt="Screenshot 2025-09-11 alle 16 52 58" src="https://github.com/user-attachments/assets/14d3fe15-f02c-43da-a136-5e4a18ff0e1a"/>
+</p>
 
 We clearly have two blocks. ne block models the 3-fair-miners systems; the other one
 describes a system with 2 fair and 1 unfair miners. A malicious environment
