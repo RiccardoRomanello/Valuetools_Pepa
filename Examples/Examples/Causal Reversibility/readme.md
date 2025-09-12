@@ -14,8 +14,8 @@ To cope with this limitation we adopted two modifications:
 If the compilation process mentioned above is successfull, the underlying LTS is modified to comply with the reversible nature of the actions. 
 
 An example is provided with the following image: 
-<p align="center>
-<img width="570" height="161" alt="Screenshot 2025-09-12 alle 10 01 28" src="https://github.com/user-attachments/assets/ab944ccc-5338-4564-b442-870e3cb36d2c"/>
+<p align="center">
+  <img width="570" height="161" alt="Screenshot 2025-09-12 alle 10 01 28" src="https://github.com/user-attachments/assets/ab944ccc-5338-4564-b442-870e3cb36d2c"/>
 </p>
 
 The green edge is the one added at compile time and it can be distinguished thanks to the dagger symbol. 
