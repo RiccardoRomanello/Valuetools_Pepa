@@ -51,4 +51,11 @@ The required Eclipse packages are
 
 3. Follow [these instructions](https://www.dcs.ed.ac.uk/pepa/documentation/#SEC1.1)
 
+## Examples
+
+In the Examples directory you can find directories with a set of example regarding the following topics:
+- Proportional Lumpability
+- Persistent Stochastic Non-Interference
+- Time Reversibility
+- Causal Reversibility
 
