@@ -14,3 +14,10 @@ The underlying LTS is as follows.
 We clearly have two blocks. ne block models the 3-fair-miners systems; the other one
 describes a system with 2 fair and 1 unfair miners. A malicious environment
 tries to replace the fair miner with an unfair one by using the high action h.
+
+Such model can be eventually generalized, with $k$ miners and one is kept unfair. 
+The file `PSNI-generator.py` can be invoked to generate a custom pepa source file. The correct line prompt is the following `python PSNI-generator.py k -o file.pepa` in which
+* $k$ must be replaced with the number of miners
+* file.pepa must be replaced with the name of the output file
+
+The `.pepa` generated file can be then fed to the PEPA Eclipse Plug-in.
