@@ -11,3 +11,4 @@ Therefore, to cope with this problem, Proportional Lumpability have been introdu
 Since ordinary, strong, and exact lumpability are already implemented in PEPA Eclipse Plug-in, we further increased the set of relations adding Proportional Lumpabilities as well. 
 
 In this directory you find the example of a proportionally lumpable process. 
+The source code has been inspired by [this paper](https://www.mdpi.com/1999-4893/17/4/159) in which authors formalize a blockchain as a set of miners and verifiers. They provide derivation graph of the PEPA process they defined, as well as its proportionally lumped version. 
