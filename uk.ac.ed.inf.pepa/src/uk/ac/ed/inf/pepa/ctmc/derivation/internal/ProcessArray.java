@@ -47,7 +47,7 @@ public class ProcessArray extends Component {
 				Transition newTransition = buf.getTransition(currentState, fOffset, fLength, 
 						fHidingSet.get(t.fActionId) ? ISymbolGenerator.TAU_ACTION : t.fActionId, 
 						fHidingSet.get(t.fActionId) ? ActionLevel.UNDEFINED : t.fLevel,
-								n * t.fRate);
+								n * t.fRate, t.fReversible);
 				newTransition.fTargetProcess[fOffset + i] = t.fTargetProcess[0];
 				Arrays.sort(newTransition.fTargetProcess, fOffset, fOffset + fLength);
 				fFirstStepDerivatives.add(newTransition);

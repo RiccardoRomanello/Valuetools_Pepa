@@ -96,6 +96,7 @@ public class Component {
 			t.fActionId =result.fActionId;
 			t.fLevel = result.fLevel;
 			t.fRate = result.fRate;
+			t.fReversible = result.fReversible;
 			transition[i++] = t;
 		}
 		return transition;
@@ -127,7 +128,7 @@ public class Component {
 							fHidingSet.get(t.fActionId)
 									? ActionLevel.UNDEFINED
 									: t.fLevel,
-							t.fRate
+							t.fRate, t.fReversible
 			);
 			fFirstStepDerivatives.add(newT);
 		}

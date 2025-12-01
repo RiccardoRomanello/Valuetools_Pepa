@@ -47,7 +47,7 @@ public class Buffer {
 	}
 
 	public Transition getTransition(short[] state, int offset, int length,
-			short actionId, ActionLevel action_level, double rate) {
+			short actionId, ActionLevel action_level, double rate, Boolean reversible) {
 		requests++;
 		Transition newTransition = null;
 		if (counter == buf.length) {
@@ -60,6 +60,7 @@ public class Buffer {
 		}
 		newTransition.fActionId = actionId;
 		newTransition.fLevel = action_level;
+		newTransition.fReversible = reversible;
 		newTransition.fRate = rate;
 		for (int i = 0; i < length; i++) {
 			newTransition.fTargetProcess[offset + i] = state[offset + i];

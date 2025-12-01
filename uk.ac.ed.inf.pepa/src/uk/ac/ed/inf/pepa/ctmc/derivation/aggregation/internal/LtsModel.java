@@ -292,7 +292,7 @@ public class LtsModel<S> implements LTS<S>, LTSBuilder<S> {
 		}
 		
 		LtsModel<S> markovChain = toMarkovChain();
-		
+		pi.put(states.get(0), 1.0);
 		return markovChain.isReversibleDFS(states.get(0), (short)0, colors, pi);
 	}
 	
@@ -309,10 +309,12 @@ public class LtsModel<S> implements LTS<S>, LTSBuilder<S> {
 			
 			if (jToiRate == 0.0) {
 				reversibleUntilNow = false; 
+				break;
 			}
 			
 			if (colors.get(neighbour) != 0 && pi.get(state)*iTojRate != pi.get(neighbour)*jToiRate) {
 				reversibleUntilNow = false;
+				break;
 			}
 			
 			if (colors.get(neighbour) == 0) {

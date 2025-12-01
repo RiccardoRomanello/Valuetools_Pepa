@@ -23,6 +23,7 @@ import uk.ac.ed.inf.pepa.ctmc.derivation.common.Operator;
 import uk.ac.ed.inf.pepa.ctmc.derivation.common.SequentialComponentData;
 import uk.ac.ed.inf.pepa.ctmc.derivation.common.Transition;
 import uk.ac.ed.inf.pepa.model.Action;
+import uk.ac.ed.inf.pepa.model.ActionLevel;
 import uk.ac.ed.inf.pepa.model.ActionSet;
 import uk.ac.ed.inf.pepa.model.Aggregation;
 import uk.ac.ed.inf.pepa.model.Choice;
@@ -297,9 +298,18 @@ public class MultipleStateExplorerBuilder {
 			transition.fTargetProcess = new short[initialStateVector.length];
 			Arrays.fill(transition.fTargetProcess, targetProcessId);
 			transition.fActionId = actionId;
-			transition.fLevel = actionMap.get(actionId).getLevel();
+			transition.fLevel = ActionLevel.LOW;
+			if (actionId != 0) {
+				transition.fLevel = actionMap.get(actionId).getLevel();
+			}
 			transition.fRate = rate;
 
+			//handling reversible actions
+			transition.fReversible = false;
+			if (actionId != 0) {
+				transition.fReversible = model.getASTModel().reversibleActionTypes().contains(actionMap.get(actionId).getName());
+			}
+			
 			data.fFirstStepDerivative.add(transition);
 			// check if target has been explored already
 			HashMapSequentialComponentData targetData = sequentialComponentsData

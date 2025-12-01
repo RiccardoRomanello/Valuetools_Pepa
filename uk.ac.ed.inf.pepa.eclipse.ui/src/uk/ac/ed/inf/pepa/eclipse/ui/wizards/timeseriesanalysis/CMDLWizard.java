@@ -240,13 +240,11 @@ public class CMDLWizard extends Wizard {
 			// TODO Auto-generated method stub
 			return null;
 		}
-
+		
 		public void reversible_verify(IProgressMonitor monitor) {
-			// TODO Auto-generated method stub
 		}
 
 		public Boolean isReversible() {
-			// TODO Auto-generated method stub
 			return null;
 		}
 

@@ -71,6 +71,7 @@ public class MemoryCallback implements ICallbackListener {
 		action.trimToSize();
 		action_level.trimToSize();
 		reversible_action.trimToSize();
+		isDone = true;
 		// qua va sistemato l'hashset
 		/*
 		System.err.println("Row: " + row);
@@ -154,9 +155,6 @@ public class MemoryCallback implements ICallbackListener {
 	}
 
 	private void foundTransition(int i, int j, double rate, short action, ActionLevel action_level, Boolean reversible) {
-		
-		// REVERSIBILI: qui sicuramente va segnato se l'azione è reversibile oppure no
-		// Check whether action is reversible or not
 		if (currentColumn != j) {
 			if (currentColumn != -1)
 				writeAction();

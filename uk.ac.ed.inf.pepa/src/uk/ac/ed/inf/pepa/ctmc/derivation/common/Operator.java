@@ -119,7 +119,7 @@ public class Operator extends Component {
 		
 		Transition t = buf.getTransition(state, fRight.fOffset, 
 				fRight.fLength, checkAction(leftEntry.fActionId), leftEntry.fLevel,
-				leftEntry.fRate);
+				leftEntry.fRate, leftEntry.fReversible);
 		for (int i = 0; i < fLeft.fLength; i++) {
 			t.fTargetProcess[fLeft.fOffset + i] = leftEntry.fTargetProcess[fLeft.fOffset + i];
 		}
@@ -158,7 +158,7 @@ public class Operator extends Component {
 		*/
 		Transition t = buf.getTransition(state, fLeft.fOffset, 
 				fLeft.fLength, checkAction(rightEntry.fActionId), rightEntry.fLevel,
-				rightEntry.fRate);
+				rightEntry.fRate, rightEntry.fReversible);
 		for (int i = 0; i < fRight.fLength; i++) {
 			t.fTargetProcess[fRight.fOffset + i] = rightEntry.fTargetProcess[fRight.fOffset + i];
 		}
@@ -211,7 +211,7 @@ public class Operator extends Component {
 		double finalRate = temp * minApparentRates;
 		
 		Transition t = buf.getTransition(state, 0, 0, checkAction(sharedActionId),
-										 leftEntry.fLevel, finalRate);
+										 leftEntry.fLevel, finalRate, leftEntry.fReversible);
 		short[] newState = t.fTargetProcess;
 		// populates left child
 		for (int i = 0; i < fLeft.fLength; i++) {
