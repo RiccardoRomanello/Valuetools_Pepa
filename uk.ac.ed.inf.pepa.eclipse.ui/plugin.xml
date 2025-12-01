@@ -137,6 +137,13 @@
                style="push"
                tooltip="Verify the Persistent Stochastic Non-Interference (PSNI)"/>
          <action
+               class="uk.ac.ed.inf.pepa.eclipse.ui.actions.ReversibilityVerifyDelegate"
+               id="uk.ac.ed.inf.pepa.eclipse.ui.ReversibilityVerify"
+               label="Verify Reversibility..."
+               menubarPath="uk.ac.ed.inf.pepa.eclipse.ui.editorMenu/uk.ac.ed.inf.pepa.eclipse.ui.editorMenu.CTMC/content"
+               style="push"
+               tooltip="Verify the Reversibility of the Underlying Markov Chain"/>
+         <action
                class="uk.ac.ed.inf.pepa.eclipse.ui.actions.DeriveActionDelegate"
                icon="icons/derive.gif"
                id="uk.ac.ed.inf.pepa.eclipse.ui.deriveAction"
