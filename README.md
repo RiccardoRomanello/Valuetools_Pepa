@@ -38,10 +38,10 @@ The required Eclipse packages are
 1. Clone locally the repository by issuing in a terminal
 
     ```bash
-    git clone https://github.com/RiccardoRomanello/PEPA_Update.git
+    git clone https://github.com/RiccardoRomanello/Valuetools_Pepa.git
     ``` 
 
-2. Execute Eclipse and load the project from new directory `PEPA_Update`
+2. Execute Eclipse and load the project from new directory `Valutools_Pepa`
 
 ## Usage
 
