@@ -39,28 +39,38 @@ public class ProportionalLumpability<S extends Comparable<S>>
 	
 	@Override
 	public LTS<Aggregated<S>> aggregate(LTS<S> initial) {
-		double rate = 0.0d;
-		// apparentRates[s] = sum of outgoing rates from state s.
 		apparentRates = new HashMap<S, Double>();
 		
-		for (S source: initial) {
-			rate = 0.0d; // sum of all outoging rates for current source
-			for (S target: initial) {
-				if(!target.equals(source)) {
-					for (Short action: initial.getActions(source, target)) {
-						rate += initial.getApparentRate(source, target, action);
-					}
+		double rate = 0.0d;
+		
+		/* 
+		 * Using Algorithm 1 from Carla's Paper. 
+		 * Assume {{0}, {the rest}} to be the initial partition \mathcal{R}
+		 * apparentRates[s] = sum_{s' s.t (s, s') \not R}{q(s, s')}
+		 */
+		
+		// first: fix state 0 apparent rate 
+		S firstState = initial.getStates().iterator().next();
+		for (S target : initial) {
+			if(!target.equals(firstState)) {
+				for (Short action: initial.getActions(firstState, target)) {
+					rate += initial.getApparentRate(firstState, target, action);
 				}
 			}
-			apparentRates.put(source, rate);
-			
 		}
+		apparentRates.put(firstState, rate);
 		
-//		for(S s : apparentRates.keySet()) {
-//			for (Short a : apparentRates.get(s).keySet()) {
-//				System.out.println("Sum of rates for state: " + s + " with action " + a + " is " + apparentRates.get(s).get(a));
-//			}
-//		}
+		// all the other states
+		for (S source: initial) {
+			if (source.equals(firstState)) {
+				continue;
+			}
+			rate = 0.0d; // sum of all outging rates for current source
+			for (Short action: initial.getActions(source, firstState)) {
+				rate += initial.getApparentRate(source, firstState, action);
+			}
+			apparentRates.put(source, rate);
+		}
 		
 		return aggregateLts(initial, findPartition(initial));
 	}
@@ -107,19 +117,36 @@ public class ProportionalLumpability<S extends Comparable<S>>
 	}
 	
 	public LTS<S> getLumpingGraph(LTS<S> lts) {
-		LtsModel<S> lgraph = new LtsModel<S>(lts);
+		LtsModel<S> lgraph = new LtsModel<S>(1);
 
-		for (S state : lgraph.getStates()) {
-			double rate = 0.0d;
-			for (S target: lgraph.getImage(state)) {
-				if (!state.equals(target)) {
-					rate -= lts.getApparentRate(state, target, ISymbolGenerator.TAU_ACTION);
+//		for (S state : lgraph.getStates()) {
+//			double rate = 0.0d;
+//			for (S target: lgraph.getImage(state)) {
+//				if (!state.equals(target)) {
+//					rate -= lts.getApparentRate(state, target, ISymbolGenerator.TAU_ACTION);
+//				}
+//			}
+//
+//			ActionLevel level = lgraph.getActionLevel(ISymbolGenerator.TAU_ACTION);
+//			lgraph.addTransition(state, state, rate, ISymbolGenerator.TAU_ACTION, level);
+//		}
+		
+		for (S state : lts.getStates()) {
+			lgraph.addState(state);
+		}
+		
+		for (S src : lts.getStates()) {
+			for (S dst : lts.getImage(src)) {
+				if (!src.equals(dst)) {
+					double totalRate = 0.0d;
+					for (short actionid : lts.getActions(src, dst)) {
+						totalRate += lts.getApparentRate(src, dst, actionid);
+					}
+					lgraph.addTransition(src, dst, totalRate/apparentRates.getOrDefault(src, 1.0d), (short)0, ActionLevel.UNDEFINED);
 				}
 			}
-
-			ActionLevel level = lgraph.getActionLevel(ISymbolGenerator.TAU_ACTION);
-			lgraph.addTransition(state, state, rate, ISymbolGenerator.TAU_ACTION, level);
 		}
+		
 
 		return lgraph;
 	}
@@ -366,7 +393,8 @@ public class ProportionalLumpability<S extends Comparable<S>>
 					seenStates.add(source);
 				}
 				double w = weights.get(source);
-				w += initial.getApparentRate(source, state, act)/apparentRates.getOrDefault(source, 1.0);
+//				w += initial.getApparentRate(source, state, act)/apparentRates.getOrDefault(source, 1.0);
+				w += initial.getApparentRate(source, state, act);
 				weights.put(source, w);
 			}
 		}
@@ -420,18 +448,27 @@ public class ProportionalLumpability<S extends Comparable<S>>
 	 */
 	public Partition<S, PartitionBlock<S>> initialPartition(LTS<S> initial) {
 		PartitionBlock<S> p;
+		PartitionBlock<S> stateZero;
 		if (options.useArrayBlocks) {
 			p = new ArrayPartitionBlock<>();
+			stateZero = new ArrayPartitionBlock<>();
 		} else {
 			p = new LinkedPartitionBlock<>();
+			stateZero = new LinkedPartitionBlock<>();
 		}
 		
 		Partition<S, PartitionBlock<S>> partition = new Partition<>();
 		
 		for (S state: initial) {
-			p.addState(state);
+			if (!state.equals(initial.getStates().iterator().next())) {
+				p.addState(state);
+			}
 		}
+		
 		partition.addBlock(p);
+		
+		stateZero.addState(initial.getStates().iterator().next());
+		partition.addBlock(stateZero);		
 		
 		return partition;
 	}
