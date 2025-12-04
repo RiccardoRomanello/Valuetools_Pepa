@@ -81,4 +81,14 @@ public class State {
 		return buf.toString();
 	}
 
+	public String getLabel(ISymbolGenerator generator)
+	{
+		StringBuffer buf = new StringBuffer(OPEN);
+		for (int i = 0; i < fState.length; i++) {
+			String seq_label = generator.getProcessLabel(fState[i]);
+			buf.append(seq_label + ((i < fState.length - 1) ? COMMA : ""));
+		}
+		buf.append(CLOSE);
+		return buf.toString();
+	}
 }

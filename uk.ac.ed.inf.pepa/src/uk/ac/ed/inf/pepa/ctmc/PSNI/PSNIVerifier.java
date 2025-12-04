@@ -8,6 +8,7 @@
 package uk.ac.ed.inf.pepa.ctmc.PSNI;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import uk.ac.ed.inf.pepa.DoNothingMonitor;
 import uk.ac.ed.inf.pepa.IProgressMonitor;
@@ -45,12 +46,20 @@ public class PSNIVerifier {
 	{
 		LtsModel<Integer> lowComplete = new LtsModel<Integer>(lts);
 
+		HashMap<Integer, String> state_labels = lowComplete.getStateLabels();
+
 		int num_of_states = lts.numberOfStates();
 
 		for (Integer state : lts.getStates()) {
-			lowComplete.addState(state + num_of_states);
+			Integer new_state = state + num_of_states;
+			String new_state_label = state_labels.get(state) + "'";
+			lowComplete.addState(new_state);
+
+			state_labels.put(new_state, new_state_label);
 		}
 		
+		lowComplete.setStateLabels(state_labels);
+
 		for (Integer state : lts.getStates()) {
 			Integer high_state = state + num_of_states;
 			
@@ -83,13 +92,15 @@ public class PSNIVerifier {
 
 		LTS<Integer> lts = deriver.derive(monitor, states);
 
-		if (log != null) {
-			log.append("LTS States:");
-			int i = 0;
-			for (State state : states) {
-				log.append("\n " + (i++) + ": " + state);
-			}
+		HashMap<Integer, String> state_labels = new HashMap<Integer, String>();
+		Integer i=0;
+		for (State state : states) {
+			state_labels.put(i++, state.getLabel(generator));
+		}
 
+		lts.setStateLabels(state_labels);
+
+		if (log != null) {
 			log.append("\n\nLTS:\n" + lts.toString().replace("LTS:\n",""));
 		}
 

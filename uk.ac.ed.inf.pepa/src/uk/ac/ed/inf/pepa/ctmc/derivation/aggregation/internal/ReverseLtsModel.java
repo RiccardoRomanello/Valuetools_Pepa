@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package uk.ac.ed.inf.pepa.ctmc.derivation.aggregation.internal;
 
@@ -18,34 +18,34 @@ import uk.ac.ed.inf.pepa.model.ActionLevel;
  */
 public class ReverseLtsModel<S> implements LTS<S> {
 
-	
+
 	LTS<S> lts;
-	
+
 	public ReverseLtsModel(LTS<S> lts) {
 		this.lts = lts;
 	}
-	
+
 	// Check if it is correct!
 	@Override
 	public double getApparentRate(S source, S target, short actionId) {
 		return lts.getApparentRate(target, source, actionId);
 	}
-	
+
 	@Override
 	public Iterable<S> getImage(S source) {
 		return lts.getPreImage(source);
 	}
-	
+
 	@Override
 	public Iterable<S> getPreImage(S target) {
 		return lts.getImage(target);
 	}
-	
+
 	@Override
 	public Iterable<S> getImage(S source, ActionLevel level) {
 		return lts.getPreImage(source, level);
 	}
-	
+
 	@Override
 	public Iterable<S> getPreImage(S target, ActionLevel level) {
 		return lts.getImage(target, level);
@@ -54,6 +54,18 @@ public class ReverseLtsModel<S> implements LTS<S> {
 	@Override
 	public Iterable<S> getStates() {
 		return lts.getStates();
+	}
+
+	@Override
+	public void setStateLabels(HashMap<S, String> state_labels)
+	{
+		lts.setStateLabels(state_labels);
+	}
+
+	@Override
+	public HashMap<S, String> getStateLabels()
+	{
+		return lts.getStateLabels();
 	}
 
 	@Override

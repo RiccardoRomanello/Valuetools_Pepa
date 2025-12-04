@@ -69,7 +69,9 @@ public class ProportionalLumpability<S extends Comparable<S>>
 			for (Short action: initial.getActions(source, firstState)) {
 				rate += initial.getApparentRate(source, firstState, action);
 			}
-			apparentRates.put(source, rate);
+			if (rate > 0.0d) {				
+				apparentRates.put(source, rate);
+			}
 		}
 		
 		return aggregateLts(initial, findPartition(initial));

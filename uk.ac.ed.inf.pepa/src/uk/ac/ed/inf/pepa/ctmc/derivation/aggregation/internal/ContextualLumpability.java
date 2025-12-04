@@ -463,6 +463,7 @@ public class ContextualLumpability<S extends Comparable<S>>
 			p.addState(state);
 		}
 		partition.addBlock(p);
+		partition.setStateLabels(initial.getStateLabels());
 		
 		return partition;
 	}

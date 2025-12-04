@@ -1,33 +1,38 @@
 package uk.ac.ed.inf.pepa.ctmc.derivation.aggregation;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.util.HashMap;
 
 import uk.ac.ed.inf.pepa.model.ActionLevel;
 
 
 /**
  * Interface to represent a PEPA's LTS model.
- * 
+ *
  * @author Giacomo Alzetta
  *
  */
 public interface LTS<S> extends Iterable<S> {
-	
+
 	/**
 	 * The number of states in the transition system.
 	 * @return the number of states in the transition system.
 	 */
 	public int numberOfStates();
-	
+
+	/**
+	 * Set the state labels
+	 *
+	 * @param state_labels
+	 */
+	public void setStateLabels(HashMap<S, String> state_labels);
+
 	/**
 	 * A transition is a triplet: <source-state, target-state, label>
-	 * 
+	 *
 	 * @return the number of transitions in the system.
 	 */
 	public int numberOfTransitions();
-	
+
 	/**
 	 * @return the number of action types that appear in LTS transitions.
 	 */
@@ -41,19 +46,26 @@ public interface LTS<S> extends Iterable<S> {
 	public Iterable<S> getStates();
 
 	/**
+	 * Return the LTS state labels
+	 *
+	 * @return the LTS state labels
+	 */
+	public HashMap<S, String> getStateLabels();
+
+	/**
 	 * Return all the action types that appear in transitions from source
 	 * to target.
-	 * 
+	 *
 	 * @param source
 	 * @param target
 	 * @return
 	 */
 	public Iterable<Short> getActions(S source, S target);
-	
+
 	/**
 	 * Return all the action types that appear in transitions from source
 	 * to target.
-	 * 
+	 *
 	 * @param source
 	 * @param target
 	 * @return
@@ -63,7 +75,7 @@ public interface LTS<S> extends Iterable<S> {
 	/**
 	 * Get the apparent rate of the transitions from source to target
 	 * with the given action type.
-	 * 
+	 *
 	 * @param source
 	 * @param target
 	 * @param actionId
@@ -75,7 +87,7 @@ public interface LTS<S> extends Iterable<S> {
 	/**
 	 * Get the level of the transitions from source to target
 	 * with the given action type.
-	 * 
+	 *
 	 * @param source
 	 * @param target
 	 * @param actionId
@@ -89,15 +101,15 @@ public interface LTS<S> extends Iterable<S> {
 	 * @return
 	 */
 	public Iterable<S> getImage(S source);
-	
+
 	/**
 	 * Get all states that have transition to target.
-	 * 
+	 *
 	 * @param target
 	 * @return
 	 */
 	public Iterable<S> getPreImage(S target);
-	
+
 
 	/**
 	 * Get all the states reachable by transitions from source.
@@ -106,10 +118,10 @@ public interface LTS<S> extends Iterable<S> {
 	 * @return
 	 */
 	public Iterable<S> getImage(S source, ActionLevel level);
-	
+
 	/**
 	 * Get all states that have transition to target.
-	 * 
+	 *
 	 * @param target
 	 * @param level
 	 * @return

@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package uk.ac.ed.inf.pepa.ctmc.derivation.aggregation.internal;
 
@@ -20,9 +20,10 @@ import uk.ac.ed.inf.pepa.model.ActionLevel;
  *
  */
 public class ArraysLtsModel implements LTS<Integer> {
-	
-	
+
+
 	private IntegerArray stateRow;
+	private HashMap<Integer, String> state_labels;
 	private IntegerArray transitionColumn;
 	private ShortArray actionColumn;
 	private ActionLevel[] action_levels;
@@ -31,15 +32,20 @@ public class ArraysLtsModel implements LTS<Integer> {
 	private DoubleArray rates;
 	private int numActionTypes;
 
-	
+
 	public ArraysLtsModel(int numActionTypes, IntegerArray row, IntegerArray column,
 						  ShortArray actions, ArrayList<ActionLevel> action_levels, DoubleArray rates) {
 		stateRow = row;
+		state_labels = new HashMap<Integer, String>();
+		for (int i=0; i<row.size(); ++i) {
+			state_labels.put(Integer.valueOf(i), ""+i);
+		}
+
 		transitionColumn = column;
 		actionColumn = actions;
 		this.rates = rates;
 		this.numActionTypes = numActionTypes;
-		
+
 		this.action_levels = new ActionLevel[numActionTypes];
 		for (int i=0; i<numActionTypes; ++i) {
 			this.action_levels[i] = ActionLevel.UNDEFINED;
@@ -52,16 +58,16 @@ public class ArraysLtsModel implements LTS<Integer> {
 
 		computePreImageColumn();
 	}
-	
+
 	@Override
 	public Iterator<Integer> iterator() {
 		return new Iterator<Integer>() {
 			private int i=0;
-			
+
 			public boolean hasNext() {
 				return i < stateRow.size();
 			}
-			
+
 			public Integer next() {
 				return i++;
 			}
@@ -79,6 +85,20 @@ public class ArraysLtsModel implements LTS<Integer> {
 		}
 
 		return states;
+	}
+
+	@Override
+	public void setStateLabels(HashMap<Integer, String> state_labels) {
+		if (state_labels.size() != numberOfStates()) {
+			throw new IllegalArgumentException("The number of state labels and that of states do not match.");
+		}
+
+		this.state_labels = state_labels;
+	}
+
+	@Override
+	public HashMap<Integer, String> getStateLabels() {
+		return state_labels;
 	}
 
 	@Override
@@ -100,19 +120,19 @@ public class ArraysLtsModel implements LTS<Integer> {
 		int endCol = (source == stateRow.size() - 1 ? transitionColumn.size() : stateRow.get(source+1));
 		for (int i=startCol; i < endCol; i += 2) {
 			int tState = transitionColumn.get(i);
-			
+
 			if (tState != target) continue;
-			
+
 			int startTrans = transitionColumn.get(i+1);
 			int endTrans = i < transitionColumn.size() -3 ? transitionColumn.get(i+3) : actionColumn.size();
 			//ArrayList<Short> acts = new ArrayList<>(endTrans - startTrans);
 			for (int j=startTrans; j < endTrans; ++j) {
 				acts.add(actionColumn.get(j));
 			}
-			
+
 			//return acts;
 		}
-		
+
 		// FIXME: maybe we should avoid this?
 		HashSet<Short> actsUnique = new HashSet<>(acts);
 		acts.clear();
@@ -139,7 +159,7 @@ public class ArraysLtsModel implements LTS<Integer> {
 		if (actionId == ISymbolGenerator.TAU_ACTION && source.equals(target)) {
 			System.err.println("found tau action! (self loop!)");
 		}
-		
+
 		//System.err.println("Found action: " + actionId);
  		// FIXME: we could pre-compute these sums.
 		int aId = actionId;
@@ -148,9 +168,9 @@ public class ArraysLtsModel implements LTS<Integer> {
 		int endCol = (source == stateRow.size() - 1 ? transitionColumn.size() : stateRow.get(source+1));
 		for (int i=startCol; i < endCol; i += 2) {
 			int tState = transitionColumn.get(i);
-			
+
 			if (tState != target) continue;
-			
+
 			int startTrans = transitionColumn.get(i+1);
 			int endTrans = i < transitionColumn.size() -3 ? transitionColumn.get(i+3) : actionColumn.size();
 			for (int j=startTrans; j < endTrans; ++j) {
@@ -159,7 +179,7 @@ public class ArraysLtsModel implements LTS<Integer> {
 				}
 			}
 		}
-		
+
 		return rate;
 	}
 
@@ -170,10 +190,10 @@ public class ArraysLtsModel implements LTS<Integer> {
 		int endCol = (source == stateRow.size() - 1 ? transitionColumn.size() : stateRow.get(source+1));
 		for (int i=startCol; i < endCol; i += 2) {
 			int tState = transitionColumn.get(i);
-			
+
 			targets.add(tState);
 		}
-		
+
 		return targets;
 	}
 
@@ -181,15 +201,15 @@ public class ArraysLtsModel implements LTS<Integer> {
 	public Iterable<Integer> getPreImage(Integer target) {
 		int rangeStart = preStateRow.get(target);
 		int rangeEnd = target == preStateRow.size()-1 ? preImageColumn.size() : preStateRow.get(target+1);
-		
+
 		ArrayList<Integer> preIm = new ArrayList<>(rangeEnd-rangeStart);
 		for (int i=rangeStart; i < rangeEnd; ++i) {
 			preIm.add(preImageColumn.get(i));
 		}
-		
+
 		return preIm;
  	}
-	
+
 
 	@Override
 	public Iterable<Integer> getImage(Integer source, ActionLevel level) {
@@ -203,7 +223,7 @@ public class ArraysLtsModel implements LTS<Integer> {
 				targets.add(tState);
 			}
 		}
-		
+
 		return targets;
 	}
 
@@ -211,25 +231,25 @@ public class ArraysLtsModel implements LTS<Integer> {
 	public ActionLevel getActionLevel(short actionId) {
 		return action_levels[actionId];
 	}
-	
+
 	@Override
 	public Iterable<Integer> getPreImage(Integer target, ActionLevel level) {
 		int rangeStart = preStateRow.get(target);
 		int rangeEnd = target == preStateRow.size()-1 ? preImageColumn.size() : preStateRow.get(target+1);
-		
+
 		ArrayList<Integer> preIm = new ArrayList<>(rangeEnd-rangeStart);
 		for (int i=rangeStart; i < rangeEnd; ++i) {
 			if (action_levels[actionColumn.get(i)] == level) {
 				preIm.add(preImageColumn.get(i));
 			}
 		}
-		
+
 		return preIm;
  	}
-	
+
 	private void computePreImageColumn() {
 		HashMap<Integer, HashSet<Integer>> pre = new HashMap<>(stateRow.size());
-		
+
 		for (int source=0; source < stateRow.size(); ++source) {
 			int rangeStart = stateRow.get(source);
 			int rangeEnd = source == stateRow.size() - 1? transitionColumn.size(): stateRow.get(source+1);
@@ -240,14 +260,14 @@ public class ArraysLtsModel implements LTS<Integer> {
 					trans = new HashSet<>();
 					pre.put(tState, trans);
 				}
-				
+
 				trans.add(source);
 			}
 		}
 
 		int total = 0;
 		HashSet<Integer> empty = new HashSet<>(0);
-		
+
 		for (int i=0; i < stateRow.size(); i++) {
 			HashSet<Integer> ts = pre.get(i);
 			int val = 0;
@@ -260,10 +280,10 @@ public class ArraysLtsModel implements LTS<Integer> {
 			}
 			total += val;
 		}
-		
+
 		preStateRow = new IntegerArray(stateRow.size());
 		preImageColumn = new IntegerArray(total);
-		
+
 		int curIndex = 0;
 		for (int target=0; target < stateRow.size(); ++target) {
 			HashSet<Integer> sources = pre.get(target);
@@ -288,26 +308,28 @@ public class ArraysLtsModel implements LTS<Integer> {
 		builder.append("LTS:\n States: {");
 		String sep = "";
 		for (int state=0; state < stateRow.size(); ++state) {
-			builder.append(sep + state);
+			builder.append(sep + state_labels.get(Integer.valueOf(state)));
 			sep = ",";
 		}
 
 		builder.append("}\n Transitions:");
 		for (int source=0; source < stateRow.size(); ++source) {
+			String src_label = state_labels.get(Integer.valueOf(source));
 			int rangeStart = stateRow.get(source);
 			int rangeEnd = source == stateRow.size()-1 ? transitionColumn.size() : stateRow.get(source+1);
 			for (int t=rangeStart; t < rangeEnd; t+=2) {
 				int target = transitionColumn.get(t);
+				String dst_label = state_labels.get(Integer.valueOf(target));
 				int startCol = transitionColumn.get(t+1);
-				int endCol = t < transitionColumn.size()-3 ? transitionColumn.get(t+3) : rates.size(); 
+				int endCol = t < transitionColumn.size()-3 ? transitionColumn.get(t+3) : rates.size();
 				for (int c=startCol; c < endCol; ++c) {
-					builder.append("\n  " + source + "-["+ actionColumn.get(c) + ","
+					builder.append("\n  " + src_label + "-["+ actionColumn.get(c) + ","
 					               + rates.get(c) + "," + action_levels[actionColumn.get(c)]
-					               + "]->" + target);
+					               + "]->" + dst_label);
 				}
 			}
 		}
-		
+
 		return builder.toString();
 	}
 }
